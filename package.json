@@ -1,6 +1,6 @@
 {
   "name": "cbng-toyolib",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -14,10 +14,11 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "run-p build:*",
-    "build:common": "tsc",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:common": "tsc -p tsconfig.build.json",
+    "build:esm": "tsc -p tsconfig.build.esm.json",
     "clean": "rimraf dist/*",
-    "test": "jest"
+    "test": "jest",
+    "publish": "./scripts/publish.sh"
   },
   "repository": {
     "type": "git",
