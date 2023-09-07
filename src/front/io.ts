@@ -32,34 +32,52 @@ export function downloadBlob(filename: string, blob: Blob): void {
 }
 
 /**
- * Generate a zip file containing the provided binary data arrays.
- * By default, each zip file is limited to a maximum of 100 files.
+ * Generate multiple ZIP files, each containing binary data arrays.
+ * By default, each individual ZIP file is limited to a maximum of 100 files.
  *
- * @param filename The name of the zip file to generate.
- * @param blobs An array of binary data to be included in the zip.
+ * @param files An array of objects representing file entries, each with a filename and a Blob.
  * @param options Optional configuration options.
- * @param options.maxSize The maximum number of files to include in a single zip (default is 100).
- * @returns A Promise that resolves to an array of Blob objects, each representing a generated zip file.
+ * @param options.maxSize The maximum number of files to include in a single ZIP file (default is 100).
+ * @returns A Promise that resolves to an array of Blob objects, each representing a generated ZIP file.
  * @throws {FrontIOError} If the generation fails.
  */
-export async function generateZip(
-  filename: string,
-  blobs: Blob[],
+export async function generateMultipleZips(
+  files: { filename: string; blob: Blob }[],
   options?: { maxSize?: number }
 ): Promise<Blob[]> {
   try {
     const result: Blob[] = [];
-    const zip = new JSZip();
-    const chunked = chunkArray(blobs, options?.maxSize ?? 100);
-    for (const chunk of chunked) {
-      chunk.forEach((blob) => zip.file(filename, blob));
-      const blob = await zip.generateAsync({ type: "blob" });
-      result.push(blob);
+    for (const chunk of chunkArray(files, options?.maxSize ?? 100)) {
+      result.push(await generateZip(chunk));
     }
     return result;
   } catch (error) {
     throw new FrontIOError(
-      `failed to generate zip: ${filename}`,
+      `failed to generate multiple zip files`,
+      error instanceof Error ? error : undefined
+    );
+  }
+}
+
+/**
+ * Generate a ZIP file from an array of binary data entries.
+ *
+ * @param files An array of objects representing file entries, each with a filename and a Blob.
+ * @returns A Promise that resolves to a Blob representing the generated ZIP file.
+ * @throws {FrontIOError} If the generation fails.
+ */
+export async function generateZip(
+  files: { filename: string; blob: Blob }[]
+): Promise<Blob> {
+  try {
+    const zip = new JSZip();
+    for (const file of files) {
+      zip.file(file.filename, file.blob);
+    }
+    return await zip.generateAsync({ type: "blob" });
+  } catch (error) {
+    throw new FrontIOError(
+      `failed to generate zip file`,
       error instanceof Error ? error : undefined
     );
   }
