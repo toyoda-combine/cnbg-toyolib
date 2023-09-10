@@ -10,7 +10,7 @@ export class BaseError extends Error {
 
   constructor(message?: string, error?: Error) {
     super(message ?? "unknown error");
-    this.name = new.target.name;
+    this.name = this.constructor.name;
     this.cause = error;
     Object.setPrototypeOf(this, new.target.prototype); // Necessary for ES6 class inheritance
   }
