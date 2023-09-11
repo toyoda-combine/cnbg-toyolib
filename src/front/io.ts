@@ -1,6 +1,11 @@
 import JSZip from "jszip";
-import { BaseError } from "@/common/errors";
-import { chunkArray } from "..";
+import { BaseError, handleUnknownError } from "@/common/errors";
+import {
+  ConvertToCsvStringOptions,
+  CsvObject,
+  chunkArray,
+  convertToCsvString,
+} from "..";
 
 /**
  * Error related to front-end I/O operations.
@@ -26,7 +31,32 @@ export function downloadBlob(filename: string, blob: Blob): void {
   } catch (error) {
     throw new FrontIOError(
       `failed to download blob: ${filename}`,
-      error instanceof Error ? error : undefined
+      handleUnknownError(error)
+    );
+  }
+}
+
+/**
+ * Download CSV data as a file.
+ *
+ * @param filename - The desired filename for the downloaded file.
+ * @param csv - The CSV data to be downloaded.
+ * @param [options] - Optional CSV conversion settings.
+ * @throws {FrontIOError} Throws a FrontIOError if the download fails.
+ */
+export function downloadCsv(
+  filename: string,
+  csv: CsvObject,
+  options?: ConvertToCsvStringOptions
+): void {
+  try {
+    const csvString = convertToCsvString(csv, options);
+    const blob = new Blob([csvString], { type: "text/plain" });
+    downloadBlob(filename, blob);
+  } catch (error) {
+    throw new FrontIOError(
+      `failed to download csv: ${filename}`,
+      handleUnknownError(error)
     );
   }
 }
@@ -54,7 +84,7 @@ export async function generateMultipleZips(
   } catch (error) {
     throw new FrontIOError(
       `failed to generate multiple zip files`,
-      error instanceof Error ? error : undefined
+      handleUnknownError(error)
     );
   }
 }
@@ -78,7 +108,7 @@ export async function generateZip(
   } catch (error) {
     throw new FrontIOError(
       `failed to generate zip file`,
-      error instanceof Error ? error : undefined
+      handleUnknownError(error)
     );
   }
 }
