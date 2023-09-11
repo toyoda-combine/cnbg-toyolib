@@ -1,6 +1,6 @@
 {
   "name": "cbng-toyolib",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
