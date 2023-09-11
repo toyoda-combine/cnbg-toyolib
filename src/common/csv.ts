@@ -23,10 +23,10 @@ export interface ConvertToCsvStringOptions {
  * @returns CSV formatted string
  * @throws {CsvError} Throws a CsvError if an error occurs during the conversion.
  */
-export function convertToCsvString(
+export function convertToCsvBuffer(
   csv: CsvObject,
   options?: ConvertToCsvStringOptions
-) {
+): Buffer {
   try {
     const eol = options?.eol ?? "\n";
     const encoding = options?.encoding ?? "utf8";
@@ -38,7 +38,7 @@ export function convertToCsvString(
         result += csv.header.map((h) => row[h]).join(",") + eol;
       }
     }
-    return iconv.encode(result, encoding).toString();
+    return iconv.encode(result, encoding);
   } catch (error) {
     throw new CsvError(
       "failed to convert to csv string",

@@ -4,7 +4,7 @@ import {
   ConvertToCsvStringOptions,
   CsvObject,
   chunkArray,
-  convertToCsvString,
+  convertToCsvBuffer,
 } from "..";
 
 /**
@@ -50,8 +50,8 @@ export function downloadCsv(
   options?: ConvertToCsvStringOptions
 ): void {
   try {
-    const csvString = convertToCsvString(csv, options);
-    const blob = new Blob([csvString], { type: "text/plain" });
+    const buffer = convertToCsvBuffer(csv, options);
+    const blob = new Blob([buffer], { type: "text/plain" });
     downloadBlob(filename, blob);
   } catch (error) {
     throw new FrontIOError(
