@@ -1,5 +1,5 @@
-import * as iconv from "iconv-lite";
 import { convertToCsvBuffer } from "./csv";
+import { decode } from "./encoding";
 
 describe("convertToCsvBuffer", () => {
   it("converts CSV data to a Buffer", () => {
@@ -50,7 +50,7 @@ describe("convertToCsvBuffer", () => {
 
     const buffer = convertToCsvBuffer(csvData, options);
 
-    const csvString = iconv.decode(buffer, "Shift_JIS");
+    const csvString = decode(buffer, { encoding: "Shift_JIS" });
     expect(csvString).toMatch(
       `名前,年齢,出身\r\nアリス,30,アメリカ\r\nボブ,25,カナダ`
     );

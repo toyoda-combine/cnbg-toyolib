@@ -1,4 +1,4 @@
-import * as iconv from "iconv-lite";
+import { encode } from "./encoding";
 import { BaseError, handleUnknownError } from "./errors";
 
 /**
@@ -38,7 +38,7 @@ export function convertToCsvBuffer(
         result += csv.header.map((h) => row[h]).join(",") + eol;
       }
     }
-    return iconv.encode(result, encoding);
+    return encode(result, { encoding });
   } catch (error) {
     throw new CsvError(
       "failed to convert to csv string",
