@@ -22,16 +22,16 @@ export class BaseError extends Error {
  */
 export class HttpError extends BaseError {
   statusCode: number;
-  response?: Record<string, unknown>;
+  response?: unknown;
 
   constructor(
     statusCode: number,
     message: string,
-    params: { response?: Record<string, unknown>; error?: Error }
+    params?: { response?: unknown; error?: Error }
   ) {
-    super(message, params.error);
+    super(message, params?.error);
     this.statusCode = statusCode;
-    this.response = params.response;
+    this.response = params?.response;
   }
 }
 
