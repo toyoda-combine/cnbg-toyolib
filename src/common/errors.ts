@@ -17,6 +17,25 @@ export class BaseError extends Error {
 }
 
 /**
+ * Base class for all http errors.
+ * @public
+ */
+export class HttpError extends BaseError {
+  statusCode: number;
+  response?: Record<string, unknown>;
+
+  constructor(
+    statusCode: number,
+    message: string,
+    params: { response?: Record<string, unknown>; error?: Error }
+  ) {
+    super(message, params.error);
+    this.statusCode = statusCode;
+    this.response = params.response;
+  }
+}
+
+/**
  * Converts an unknown error into an Error instance with a descriptive message.
  *
  * @param error - The unknown error to handle.
