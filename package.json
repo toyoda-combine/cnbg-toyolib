@@ -1,7 +1,8 @@
 {
   "name": "cbng-toyolib",
-  "version": "0.1.16",
+  "version": "0.2.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
