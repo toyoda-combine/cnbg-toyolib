@@ -17,6 +17,7 @@ const DEFAULT_ENCODING = "utf8" as const;
  * @param options - Optional settings for encoding.
  * @returns The decoded string.
  * @throws {EncodingError} Throws an error if the decoding operation fails.
+ * @deprecated
  */
 export function decode(buffer: Buffer, options?: EncodingOptions): string {
   try {
@@ -33,6 +34,7 @@ export function decode(buffer: Buffer, options?: EncodingOptions): string {
  * @param options - Optional settings for encoding.
  * @returns The encoded buffer.
  * @throws {EncodingError} Throws an error if the encoding operation fails.
+ * @deprecated
  */
 export function encode(content: string, options?: EncodingOptions): Buffer {
   try {
