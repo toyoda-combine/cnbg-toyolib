@@ -1,5 +1,4 @@
 import { convertToCsvBuffer } from "./csv";
-import { decode } from "./encoding";
 
 describe("convertToCsvBuffer", () => {
   it("converts CSV data to a Buffer", () => {
@@ -45,12 +44,11 @@ describe("convertToCsvBuffer", () => {
 
     const options = {
       eol: "\r\n",
-      encoding: "Shift_JIS",
     } as const;
 
     const buffer = convertToCsvBuffer(csvData, options);
 
-    const csvString = decode(buffer, { encoding: "Shift_JIS" });
+    const csvString = buffer.toString();
     expect(csvString).toMatch(
       `名前,年齢,出身\r\nアリス,30,アメリカ\r\nボブ,25,カナダ`
     );

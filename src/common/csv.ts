@@ -1,4 +1,3 @@
-import { encode } from "./encoding";
 import { BaseError, handleUnknownError } from "./errors";
 
 /**
@@ -13,7 +12,6 @@ export interface CsvObject {
 
 export interface ConvertToCsvStringOptions {
   eol?: "\n" | "\r\n";
-  encoding?: "utf8" | "Shift_JIS" | "cp932";
 }
 
 /**
@@ -29,7 +27,6 @@ export function convertToCsvBuffer(
 ): Buffer {
   try {
     const eol = options?.eol ?? "\n";
-    const encoding = options?.encoding ?? "utf8";
     let result = csv.header.join(",") + eol;
     for (const row of csv.rows) {
       if (Array.isArray(row)) {
@@ -38,7 +35,7 @@ export function convertToCsvBuffer(
         result += csv.header.map((h) => row[h]).join(",") + eol;
       }
     }
-    return encode(result, { encoding });
+    return Buffer.from(result);
   } catch (error) {
     throw new CsvError(
       "failed to convert to csv string",

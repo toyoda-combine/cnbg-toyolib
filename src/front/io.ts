@@ -1,4 +1,3 @@
-import JSZip from "jszip";
 import { BaseError, handleUnknownError } from "@/common/errors";
 import {
   ConvertToCsvStringOptions,
@@ -56,58 +55,6 @@ export function downloadCsv(
   } catch (error) {
     throw new FrontIOError(
       `failed to download csv: ${filename}`,
-      handleUnknownError(error)
-    );
-  }
-}
-
-/**
- * Generate multiple ZIP files, each containing binary data arrays.
- * By default, each individual ZIP file is limited to a maximum of 100 files.
- *
- * @param files An array of objects representing file entries, each with a filename and a Blob.
- * @param options Optional configuration options.
- * @param options.maxSize The maximum number of files to include in a single ZIP file (default is 100).
- * @returns A Promise that resolves to an array of Blob objects, each representing a generated ZIP file.
- * @throws {FrontIOError} If the generation fails.
- */
-export async function generateMultipleZips(
-  files: { filename: string; blob: Blob }[],
-  options?: { maxSize?: number }
-): Promise<Blob[]> {
-  try {
-    const result: Blob[] = [];
-    for (const chunk of chunkArray(files, options?.maxSize ?? 100)) {
-      result.push(await generateZip(chunk));
-    }
-    return result;
-  } catch (error) {
-    throw new FrontIOError(
-      `failed to generate multiple zip files`,
-      handleUnknownError(error)
-    );
-  }
-}
-
-/**
- * Generate a ZIP file from an array of binary data entries.
- *
- * @param files An array of objects representing file entries, each with a filename and a Blob.
- * @returns A Promise that resolves to a Blob representing the generated ZIP file.
- * @throws {FrontIOError} If the generation fails.
- */
-export async function generateZip(
-  files: { filename: string; blob: Blob }[]
-): Promise<Blob> {
-  try {
-    const zip = new JSZip();
-    for (const file of files) {
-      zip.file(file.filename, file.blob);
-    }
-    return await zip.generateAsync({ type: "blob" });
-  } catch (error) {
-    throw new FrontIOError(
-      `failed to generate zip file`,
       handleUnknownError(error)
     );
   }

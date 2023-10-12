@@ -21,12 +21,8 @@ module.exports = {
       buffer: require.resolve("buffer/"),
     },
   },
-  experiments: {
-    outputModule: true,
-  },
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "dist"),
-    libraryTarget: "module",
   },
 };
