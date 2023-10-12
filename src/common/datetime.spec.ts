@@ -4,6 +4,7 @@ import {
   isAfterISO,
   isEqualISO,
   isBetweenISO,
+  unixTimeToISO8601,
 } from "./datetime";
 
 describe("isBeforeISO", () => {
@@ -168,5 +169,33 @@ describe("isBetweenISO", () => {
         "invalid-date"
       )
     ).toThrowError(DatetimeError);
+  });
+});
+
+describe("unixTimeToISO8601", () => {
+  it("should correctly convert a Unix timestamp to an ISO8601 string", () => {
+    expect(unixTimeToISO8601(1697086573)).toBe("2023-10-12T13:56:13+09:00");
+  });
+
+  it("should handle the epoch time correctly", () => {
+    const result = unixTimeToISO8601(0);
+    expect(result).toBe("1970-01-01T09:00:00+09:00");
+  });
+
+  it("should handle a very large Unix Timestamp", () => {
+    const result = unixTimeToISO8601(4102444800);
+    expect(result).toBe("2100-01-01T09:00:00+09:00");
+  });
+
+  it("should throw a DateTimeError on negative Unix Timestamps", () => {
+    expect(() => {
+      unixTimeToISO8601(-1);
+    }).toThrow(DatetimeError);
+  });
+
+  it("should throw a DatetimeError on invalid input", () => {
+    expect(() => {
+      unixTimeToISO8601(NaN);
+    }).toThrow(DatetimeError);
   });
 });

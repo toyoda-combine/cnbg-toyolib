@@ -110,3 +110,40 @@ export function isBetweenISO(
     );
   }
 }
+
+/**
+ * Converts a Unix Timestamp to an ISO8601 formatted date string.
+ *
+ * @param unixTime - The Unix Timestamp to convert.
+ * @returns The ISO8601 formatted date string.
+ * @throws {DatetimeError} Throws a DateTimeError if an error occurs during the conversion.
+ */
+export function unixTimeToISO8601(unixTime: number): string {
+  try {
+    if (unixTime < 0) {
+      throw new Error("invalid unixTime");
+    }
+
+    const date = new Date(unixTime * 1000);
+
+    const timeZoneOffset = -date.getTimezoneOffset();
+    const offsetHours = Math.floor(timeZoneOffset / 60);
+    const offsetMinutes = timeZoneOffset % 60;
+
+    date.setHours(date.getHours() + offsetHours);
+    date.setMinutes(date.getMinutes() + offsetMinutes);
+
+    const timeZone =
+      (offsetHours >= 0 ? "+" : "-") +
+      String(Math.abs(offsetHours)).padStart(2, "0") +
+      ":" +
+      String(Math.abs(offsetMinutes)).padStart(2, "0");
+
+    return date.toISOString().slice(0, 19) + timeZone;
+  } catch (error) {
+    throw new DatetimeError(
+      "Unable to convert unixTime to ISO8601",
+      handleUnknownError(error)
+    );
+  }
+}
